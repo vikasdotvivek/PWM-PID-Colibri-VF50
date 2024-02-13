@@ -13,3 +13,11 @@ Serial communication protocol:
 Data is sent out every 250ms, updating feedback values from sensors to the PC. Any faster update results is data corruption. 
 On any command sent from PC to Colibri, such as starting the motor for desired application, an update string is sent containing '#' to mark different segments or packets of data.
 This string is read under a try-catch statement to prevent bugging out if data is corrupted.
+
+
+
+Every checkbox or button will send out a serial command containing one or two changed variables, and rest will be blank variables:
+![image](https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/assets/43683145/7d2e1dc1-e469-409a-82ee-aa2a42245e7b)
+
+
+
