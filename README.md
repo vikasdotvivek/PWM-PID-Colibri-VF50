@@ -1,7 +1,5 @@
 # PWM-PID-Colibri-VF50
 
-Source code of the application cannot be shared.
-
 Toradex Colibri VF50 doesn't have digital to analog converter. Delta motors used in this application requires analog voltage for speed control. So, PWM is used to simulate voltage and it's frequency can be varied to control motor speed.
 
 PID control is implemented such that error between target and feedback value is multiplied with an user adjustable gain, to accomodate differences amoong plethora of products.
@@ -16,8 +14,8 @@ This string is read under a try-catch statement to prevent bugging out if data i
 
 
 
-Every checkbox or button will send out a serial command containing one or two changed variables, and rest will be blank variables:
 ![image](https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/assets/43683145/7d2e1dc1-e469-409a-82ee-aa2a42245e7b)
+Every checkbox or button will send out a serial command containing one or two changed variables, and rest will be blank variables as demonstrated in the example code
 
 
 
