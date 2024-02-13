@@ -1,0 +1,26 @@
+            String tempData = pressCtrller.ReadExisting();    //reads incoming data from serial port, here declared by pressCtrller
+            String[] splitData;
+            splitData = tempData.Split('#');    //data is split at every '#' encounter
+
+            try { CNFcontrolMode = splitData[1] == "" ? CNFcontrolMode : splitData[1]; }
+            catch { }
+            try { CNFgivenPress = splitData[2] == "" ? CNFgivenPress : splitData[2]; }
+            catch { }
+            try { CNFfeedbackpress = splitData[3] == "" ? CNFfeedbackpress : splitData[3]; }
+            catch { }
+            try { CNFgivenVolume = splitData[4] == "" ? CNFgivenVolume : splitData[4]; }
+            catch { }
+            try { CNFfeedbackVolume = splitData[5] == "" ? CNFfeedbackVolume : splitData[5]; }
+            catch { }
+            try { CNFtarePress = splitData[6] == "" ? CNFtarePress : splitData[6]; }
+            catch { }
+            try { CNFtareVol = splitData[7] == "" ? CNFtareVol : splitData[7]; }
+            catch { }
+            try { CNFrateofLoading = splitData[8] == "" ? CNFrateofLoading : splitData[8]; }
+            catch { }
+            try { CNFdataFileName = splitData[9] == "" ? CNFdataFileName : splitData[9]; }
+            catch { }
+            try { CNFsaveDataYesNo = splitData[10] == "" ? CNFsaveDataYesNo : splitData[10]; }
+            catch { }
+            try { CNFstartYesNo = splitData[11] == "" ? CNFstartYesNo : splitData[11]; }        //only required variable is altered, rest are left blank which results in going to catch statement of that particular variable
+            catch { }          
