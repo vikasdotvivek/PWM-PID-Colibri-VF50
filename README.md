@@ -15,6 +15,7 @@ This string is read under a try-catch statement to prevent bugging out if data i
 
 
 ![image](https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/assets/43683145/7d2e1dc1-e469-409a-82ee-aa2a42245e7b)
+
 Every checkbox or button will send out a serial command containing one or two changed variables, and rest will be blank variables as demonstrated in the example code
 
 
