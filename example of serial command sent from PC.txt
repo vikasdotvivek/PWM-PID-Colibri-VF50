@@ -1,0 +1,2 @@
+serialport->WriteLine("#" + "#"  + "#" + "#" + "#" + "#" + "#" + "#"  + "#" + "#"  + "#" + "False" + "#");
+    //here for example, multiple '#' are provided with blank values for variable, only the second last '#' has False, which in turn starts or stops the motor.
