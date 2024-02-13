@@ -1,0 +1,12 @@
+                    finalFreq = (float)MachineParams.PressureGain * (baseVal - float.Parse(label33.Text));    //final frequency will be some gain multiplied with error between target and feedback values
+                    finalFreq = Math.Abs(finalFreq);    //since it mihgt be a negative or positive
+                    StartPulse((uint)finalFreq);        //another function which takes +ve integers as frequency and commands colibri to generate pulse of that frequency
+
+                    where
+
+                    StartPulse(freq)
+                    {
+                        pwm_vyb.VybPwm_Open(PulseOut);    // PulseOut is name defined for that particular pwm port
+                        pwm_vyb.VybPwm_SetPwm(PulseOut, freq, 32768);                    
+                    }
+                      
