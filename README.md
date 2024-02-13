@@ -1,4 +1,4 @@
-# PWM-PID-Toradex-Public
+# PWM-PID-Colibri-VF50
 
 Source code of the application cannot be shared.
 
