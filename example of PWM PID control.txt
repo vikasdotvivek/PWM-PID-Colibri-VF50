@@ -1,8 +1,8 @@
                     finalFreq = (float)MachineParams.PressureGain * (baseVal - float.Parse(label33.Text));    //final frequency will be some gain multiplied with error between target and feedback values
-                    finalFreq = Math.Abs(finalFreq);    //since it mihgt be a negative or positive
-                    StartPulse((uint)finalFreq);        //another function which takes +ve integers as frequency and commands colibri to generate pulse of that frequency
+                    finalFreq = Math.Abs(finalFreq);    //since it might be a negative or positive
+                    StartPulse((uint)finalFreq);        //another function which takes +ve integers as frequency, and commands colibri to generate pulse of that frequency
 
-                    where
+                    //where StartPulse function has a function calling to TdxAllLibrariesDll.dll which accepts unsigned integers for frequency (should be obviously above zero)
 
                     StartPulse(freq)
                     {
