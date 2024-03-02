@@ -1,3 +1,4 @@
 serialport->WriteLine("#" + "#"  + "#" + "#" + "#" + "#" + "#" + "#"  + "#" + "#"  + "#" + "False" + "#");
+
     //here for example, multiple '#' are provided with blank values for variable, only the second last '#' has False, which in turn starts or stops the motor.
-    //blank values will bug out when read, but since every variable is stored under a try-catch statement, 
+    //Blank values will bug out when read, but since every variable is stored under a try-catch statement, it will continue on to the next statement 
