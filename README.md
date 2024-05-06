@@ -2,7 +2,7 @@
 
 *HEICO. Some information redacted*
 
-USART-PID-PWM-Controller
+**|USART|PID|PWM|Controller|**
 
 Toradex Colibri VF50 doesn't have digital to analog converter. Delta motors used in this application requires analog voltage for speed control. So, PWM is used to simulate voltage and it's frequency can be varied to control motor speed.
 
