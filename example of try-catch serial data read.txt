@@ -1,26 +1,105 @@
-            String tempData = pressCtrller.ReadExisting();    //reads incoming data from serial port, here declared by pressCtrller
-            String[] splitData;
-            splitData = tempData.Split('#');    //data is split at every '#' encounter
+SERIAL RECEIVE EXAMPLE (C#, WinForms / .NET Compact Framework integration)
+==========================================================================
 
-            try { CNFcontrolMode = splitData[1] == "" ? CNFcontrolMode : splitData[1]; }
-            catch { }
-            try { CNFgivenPress = splitData[2] == "" ? CNFgivenPress : splitData[2]; }
-            catch { }
-            try { CNFfeedbackpress = splitData[3] == "" ? CNFfeedbackpress : splitData[3]; }
-            catch { }
-            try { CNFgivenVolume = splitData[4] == "" ? CNFgivenVolume : splitData[4]; }
-            catch { }
-            try { CNFfeedbackVolume = splitData[5] == "" ? CNFfeedbackVolume : splitData[5]; }
-            catch { }
-            try { CNFtarePress = splitData[6] == "" ? CNFtarePress : splitData[6]; }
-            catch { }
-            try { CNFtareVol = splitData[7] == "" ? CNFtareVol : splitData[7]; }
-            catch { }
-            try { CNFrateofLoading = splitData[8] == "" ? CNFrateofLoading : splitData[8]; }
-            catch { }
-            try { CNFdataFileName = splitData[9] == "" ? CNFdataFileName : splitData[9]; }
-            catch { }
-            try { CNFsaveDataYesNo = splitData[10] == "" ? CNFsaveDataYesNo : splitData[10]; }
-            catch { }
-            try { CNFstartYesNo = splitData[11] == "" ? CNFstartYesNo : splitData[11]; }        //only required variable is altered, rest are left blank which results in going to catch statement of that particular variable
-            catch { }          
+This example shows ONLY serial reception and validation. It replaces the old
+ReadExisting().Split('#') and per-field empty catch blocks. It does not send
+motor commands or update device state.
+
+Prerequisite: add src/SerialProtocol.cs to the receiving C# project.
+Wire format: #field1#...#field11# terminated by LF or CRLF.
+One DataReceived callback may contain a partial frame or several frames.
+
+// Required using directives in the existing Form:
+// using System;
+// using System.Diagnostics;
+// using System.IO;
+// using System.IO.Ports;
+// using System.Windows.Forms;
+// using PwmPidColibri.Serial;
+
+// Add one instance PER serial port to the existing WinForms Form class:
+private readonly SerialCommandReceiver _receiver = new SerialCommandReceiver(512);
+
+// Register this handler with the existing SerialPort.DataReceived event:
+private void pressCtrller_DataReceived(object sender, SerialDataReceivedEventArgs e)
+{
+    string chunk;
+    try
+    {
+        chunk = pressCtrller.ReadExisting();
+    }
+    catch (IOException ex)
+    {
+        Debug.WriteLine("Serial I/O error: " + ex.Message);
+        return; // application must separately handle communication loss
+    }
+    catch (InvalidOperationException ex)
+    {
+        Debug.WriteLine("Serial port not open: " + ex.Message);
+        return;
+    }
+
+    // Feed the entire chunk; incomplete frames remain buffered.
+    ReceiveResult batch = _receiver.Feed(chunk);
+
+    // Errors do not silently disappear.
+    for (int i = 0; i < batch.Rejections.Length; i++)
+        Debug.WriteLine("Invalid serial frame: " + batch.Rejections[i]);
+
+    if (batch.OverlongLines != 0)
+        Debug.WriteLine("Dropped oversized serial frame(s): " + batch.OverlongLines);
+
+    // Each update here is a COMPLETE, VALIDATED 11-field frame.
+    for (int i = 0; i < batch.Updates.Length; i++)
+    {
+        ControlUpdate update = batch.Updates[i];
+
+        // This example displays values only, so marshal to the UI thread.
+        // Do not rely on UI dispatch for safety-critical motor shutdown.
+        if (!IsDisposed && IsHandleCreated)
+            BeginInvoke(new MethodInvoker(delegate { ShowReceivedFields(update); }));
+    }
+}
+
+// Print only fields explicitly included in the incoming sparse update.
+// There is no device-specific control code here.
+private void ShowReceivedFields(ControlUpdate update)
+{
+    for (int i = 0; i < ControlProtocol.FieldCount; i++)
+    {
+        ControlField field = (ControlField)i;
+        if (update.Has(field))
+            Debug.WriteLine(field.ToString() + " = " + update.GetText(field));
+    }
+}
+
+// After closing and reopening the serial connection, call:
+// _receiver.Reset();    // discard any incomplete frame from the old session
+
+
+EXAMPLE
+-------
+Input may arrive as two serial callbacks:
+  callback 1: "###########Fal"
+  callback 2: "se#\n"
+
+The first callback does NOT update any field.
+Once the newline arrives, the decoder validates all 11 fields and
+returns one ControlUpdate whose Start field is False.
+
+Alternatively, a single callback may contain:
+  "#Pressure###########\n###########False#\n"
+
+That is two complete frames. Both are validated and returned IN ORDER.
+
+Blank fields remain unchanged. An explicit Start=False is different from
+an empty Start field.
+
+IMPORTANT
+---------
+- The sender must terminate EACH complete frame with LF or CRLF.
+- A lone # is a field delimiter, not a complete packet delimiter.
+- A malformed frame is rejected as a whole, not partially applied.
+- The 512-character limit is a per-frame cap, not a communication timeout.
+- Framing and parsing do not supply CRC, sequencing, or a watchdog.
+- Verify runtime compatibility with the installed .NET Compact Framework.
