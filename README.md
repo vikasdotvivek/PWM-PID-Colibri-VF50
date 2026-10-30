@@ -27,3 +27,45 @@ Every checkbox or button will send out a serial command containing one or two ch
 
 
 
+
+
+## Robust serial framing reference (proposed change)
+
+The original snippets remain unchanged. See [src/SerialProtocol.cs](src/SerialProtocol.cs), [examples/WinCeControllerIntegration.cs](examples/WinCeControllerIntegration.cs), and [tests/Program.cs](tests/Program.cs).
+
+**Problem:** `SerialPort.DataReceived` does not guarantee exactly one complete message. `ReadExisting().Split('#')` can read half a packet or two concatenated packets, and empty catch blocks conceal invalid data. The original sparse 11-field protocol is retained, but each command or status message must now be terminated with LF or CRLF (the original `WriteLine` sender supplies this if `NewLine` is configured accordingly).
+
+**Updated receive path:** append serial chunks to a bounded per-port buffer; extract complete newline-delimited records; validate all 11 fields and optional final `#`; reject the entire malformed record; then dispatch each validated update to the existing UI/controller thread. Empty fields remain unchanged. No partial command is applied. Reset framing when reconnecting.
+
+The 11 fields are, in order: control mode, given pressure, feedback pressure, given volume, feedback volume, tare pressure, tare volume, rate of loading, filename, save-data flag, start flag. Numeric fields require finite invariant-culture numbers; Boolean fields require True/False. Control mode accepts Pressure, Volume, Filling, or None. Check these against your deployed field definitions before integration.
+
+**Example stop command, preserving all other fields:**
+
+```csharp
+serialport.WriteLine(ControlProtocol.BuildSingleFieldCommand(ControlField.Start, "False"));
+```
+
+**Example receive path:**
+
+```csharp
+// One instance per serial connection.
+SerialCommandReceiver receiver = new SerialCommandReceiver(512);
+
+// Inside DataReceived:
+ReceiveResult result = receiver.Feed(serialport.ReadExisting());
+foreach (ControlUpdate update in result.Updates)
+{
+    // Marshal to the UI/controller thread and apply validated fields.
+}
+// Log result.Rejections and result.OverlongLines.
+```
+
+**Run automated protocol tests** (requires .NET 8 SDK):
+
+```sh
+dotnet run --project tests/SerialProtocol.SelfTest.csproj --configuration Release
+```
+
+The parser uses older C# syntax to facilitate porting to a WinCE/.NET Compact Framework application. Compatibility with the actual device toolchain, installed serial library, and Toradex hardware has **not** been verified.
+
+**Safety limitations:** framing and validation do not provide a CRC, authentication, sequence number, or communication watchdog; valid-looking corrupted or replayed frames may still be accepted. A PC sending sporadic commands should not be interpreted as a periodic heartbeat. The new code is a reference implementation, not a deployed motor controller. Validate machine interlocks, safe stop on faults, parameter limits, and sensor freshness independently before using any received Start=True command to drive PWM. Do not use the UI thread as the sole safety-stop path.
