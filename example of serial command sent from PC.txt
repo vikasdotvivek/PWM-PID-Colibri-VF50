@@ -1,4 +1,56 @@
-serialport->WriteLine("#" + "#"  + "#" + "#" + "#" + "#" + "#" + "#"  + "#" + "#"  + "#" + "False" + "#");
+SERIAL TRANSMIT EXAMPLE (C++/CLI, PC side)
+=========================================
 
-    //here for example, multiple '#' are provided with blank values for variable, only the second last '#' has False, which in turn starts or stops the motor.
-    //Blank values will bug out when read, but since every variable is stored under a try-catch statement, it will continue on to the next statement 
+This example shows ONLY the existing # delimited serial protocol.
+It uses the 11-field layout already defined by the project:
+
+  1  ControlMode       2  GivenPressure     3  FeedbackPressure
+  4  GivenVolume      5  FeedbackVolume    6  TarePressure
+  7  TareVolume       8  RateOfLoading     9  DataFileName
+  10 SaveData         11 Start
+
+Wire format: #field1#field2#...#field11# followed by LF (or CRLF).
+A blank field means "do not change the receiver's existing value".
+A non-empty field is an explicit update (for example, Start=False).
+
+// The following code belongs in the PC-side C++/CLI application.
+// 'serialport' is an already-open System::IO::Ports::SerialPort^.
+
+using namespace System;
+
+const int FieldCount = 11;
+array<String^>^ fields = gcnew array<String^>(FieldCount);
+
+for (int i = 0; i < fields->Length; i++)
+    fields[i] = String::Empty;
+
+// Example 1: update ONLY the Start field to False.
+fields[10] = "False";
+
+serialport->NewLine = "\n";  // the receiver requires LF or CRLF framing
+String^ stopFrame = String::Concat("#", String::Join("#", fields), "#");
+serialport->WriteLine(stopFrame);  // WriteLine adds the terminating LF
+
+// Example 2: update ONLY the GivenPressure field to 12.5.
+// Clear the previous update first; blank fields remain unchanged.
+fields[10] = String::Empty;
+fields[1] = "12.5";   // use '.' as the decimal separator
+
+String^ pressureFrame = String::Concat("#", String::Join("#", fields), "#");
+serialport->WriteLine(pressureFrame);
+
+// Equivalent C# sender using src/SerialProtocol.cs:
+// serialPort.NewLine = "\n";
+// serialPort.WriteLine(
+//     ControlProtocol.BuildSingleFieldCommand(ControlField.Start, "False"));
+
+
+IMPORTANT
+---------
+- Do not assume one WriteLine produces one DataReceived event.
+- Use the receiver's LineFrameDecoder/SerialCommandReceiver to reassemble
+  partial reads and process multiple completed frames in a single read.
+- Validate all fields before applying any of them.
+- This example demonstrates serialization only: it does not operate hardware.
+- The sender and receiver must agree on newline framing; the old # markers
+  alone are field separators, not reliable record boundaries.
