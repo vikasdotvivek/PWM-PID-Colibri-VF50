@@ -1,0 +1,173 @@
+{
+  "generator": "repository-static-triage",
+  "version": "1.0",
+  "repository": "vikasdotvivek/PWM-PID-Colibri-VF50",
+  "revision": "d0d632754ae7927c155c6a365657230344eb2d04",
+  "tracked_files": 8,
+  "scanned": [
+    {
+      "path": "example of PWM PID control.txt",
+      "lines": 12,
+      "bytes": 960
+    },
+    {
+      "path": "example of serial command sent from PC.txt",
+      "lines": 4,
+      "bytes": 417
+    },
+    {
+      "path": "example of try-catch serial data read.txt",
+      "lines": 26,
+      "bytes": 1625
+    }
+  ],
+  "skipped": [
+    {
+      "path": ".github/workflows/code-improvement-review.yml",
+      "reason": "non-source format; content not audited"
+    },
+    {
+      "path": ".review/action.yml",
+      "reason": "generated/vendor/review path"
+    },
+    {
+      "path": ".review/audit.py",
+      "reason": "generated/vendor/review path"
+    },
+    {
+      "path": ".review/test_audit.py",
+      "reason": "generated/vendor/review path"
+    },
+    {
+      "path": "README.md",
+      "reason": "non-source format; content not audited"
+    }
+  ],
+  "manifests": [],
+  "conventional_test_paths": [],
+  "findings": [
+    {
+      "rule": "serial-chunk-split",
+      "priority": "P1",
+      "path": "example of try-catch serial data read.txt",
+      "line": 1,
+      "title": "Serial read appears split before frame reconstruction",
+      "recommendation": "Inspect the surrounding parser; test partial, combined, malformed and oversized frames before replacing the wire protocol.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L1"
+    },
+    {
+      "rule": "empty-catch",
+      "priority": "P2",
+      "path": "example of try-catch serial data read.txt",
+      "line": 6,
+      "title": "Empty catch discards an exception",
+      "recommendation": "Handle expected failures explicitly and preserve diagnostics; define the fault response before changing hardware behavior.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L6"
+    },
+    {
+      "rule": "empty-catch",
+      "priority": "P2",
+      "path": "example of try-catch serial data read.txt",
+      "line": 8,
+      "title": "Empty catch discards an exception",
+      "recommendation": "Handle expected failures explicitly and preserve diagnostics; define the fault response before changing hardware behavior.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L8"
+    },
+    {
+      "rule": "empty-catch",
+      "priority": "P2",
+      "path": "example of try-catch serial data read.txt",
+      "line": 10,
+      "title": "Empty catch discards an exception",
+      "recommendation": "Handle expected failures explicitly and preserve diagnostics; define the fault response before changing hardware behavior.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L10"
+    },
+    {
+      "rule": "empty-catch",
+      "priority": "P2",
+      "path": "example of try-catch serial data read.txt",
+      "line": 12,
+      "title": "Empty catch discards an exception",
+      "recommendation": "Handle expected failures explicitly and preserve diagnostics; define the fault response before changing hardware behavior.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L12"
+    },
+    {
+      "rule": "empty-catch",
+      "priority": "P2",
+      "path": "example of try-catch serial data read.txt",
+      "line": 14,
+      "title": "Empty catch discards an exception",
+      "recommendation": "Handle expected failures explicitly and preserve diagnostics; define the fault response before changing hardware behavior.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L14"
+    },
+    {
+      "rule": "empty-catch",
+      "priority": "P2",
+      "path": "example of try-catch serial data read.txt",
+      "line": 16,
+      "title": "Empty catch discards an exception",
+      "recommendation": "Handle expected failures explicitly and preserve diagnostics; define the fault response before changing hardware behavior.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L16"
+    },
+    {
+      "rule": "empty-catch",
+      "priority": "P2",
+      "path": "example of try-catch serial data read.txt",
+      "line": 18,
+      "title": "Empty catch discards an exception",
+      "recommendation": "Handle expected failures explicitly and preserve diagnostics; define the fault response before changing hardware behavior.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L18"
+    },
+    {
+      "rule": "empty-catch",
+      "priority": "P2",
+      "path": "example of try-catch serial data read.txt",
+      "line": 20,
+      "title": "Empty catch discards an exception",
+      "recommendation": "Handle expected failures explicitly and preserve diagnostics; define the fault response before changing hardware behavior.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L20"
+    },
+    {
+      "rule": "empty-catch",
+      "priority": "P2",
+      "path": "example of try-catch serial data read.txt",
+      "line": 22,
+      "title": "Empty catch discards an exception",
+      "recommendation": "Handle expected failures explicitly and preserve diagnostics; define the fault response before changing hardware behavior.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L22"
+    },
+    {
+      "rule": "empty-catch",
+      "priority": "P2",
+      "path": "example of try-catch serial data read.txt",
+      "line": 24,
+      "title": "Empty catch discards an exception",
+      "recommendation": "Handle expected failures explicitly and preserve diagnostics; define the fault response before changing hardware behavior.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L24"
+    },
+    {
+      "rule": "empty-catch",
+      "priority": "P2",
+      "path": "example of try-catch serial data read.txt",
+      "line": 26,
+      "title": "Empty catch discards an exception",
+      "recommendation": "Handle expected failures explicitly and preserve diagnostics; define the fault response before changing hardware behavior.",
+      "status": "review-required",
+      "source": "https://github.com/vikasdotvivek/PWM-PID-Colibri-VF50/blob/d0d632754ae7927c155c6a365657230344eb2d04/example%20of%20try-catch%20serial%20data%20read.txt#L26"
+    }
+  ],
+  "total_findings": 12,
+  "findings_omitted": 0,
+  "execution": "No repository code, tests, builds or hardware were executed."
+}
